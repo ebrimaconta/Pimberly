@@ -68,7 +68,19 @@ function Display() {
   }
   return (
     <>
-     
+      <Input type='text' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} name='searchbox' />
+      <GitDisplay git={getPaginatedData} />
+      <ButtonContainer>
+        <Button className={`${currentPage === 1 ? 'disabled' : ''}`} onClick={() => setCurrentPage(currentPage - 1)}>
+          Prev
+        </Button>
+        <Button
+          className={`${currentPage === pages ? 'disabled' : ''}`}
+          onClick={() => setCurrentPage(currentPage + 1)}
+        >
+          Next
+        </Button>
+      </ButtonContainer>
     </>
   );
 }
