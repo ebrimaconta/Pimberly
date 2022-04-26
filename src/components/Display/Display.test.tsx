@@ -11,9 +11,6 @@ describe('<Display/>', () => {
   beforeEach(() => {
     (fetchData as jest.Mock).mockImplementation(() => Promise.resolve(gitAlot.items));
   });
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
 
   const renderComponent = () => {
     const utils = render(<Display />);
