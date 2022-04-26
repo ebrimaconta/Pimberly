@@ -26,7 +26,7 @@ describe('<Display/>', () => {
     expect(await screen.findByPlaceholderText('Typing...')).toBeInTheDocument();
   });
 
-  it('should render component after loading', async () => {
+  it('should render component test prev button is disable and next button is enable', async () => {
     act(() => {
       renderComponent();
     });
