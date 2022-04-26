@@ -5,8 +5,12 @@ const ButtonStyle = styled.button`
   margin-right: 20px;
   padding: 10px;
 `;
-
-function Button({ className, onClick, children }) {
+interface IButton {
+  className: string;
+  onClick: () => void;
+  children: string;
+}
+function Button({ className, onClick, children }: IButton) {
   return (
     <>
       <ButtonStyle className={className} onClick={onClick}>

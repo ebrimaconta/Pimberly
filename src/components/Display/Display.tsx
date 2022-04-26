@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import GitDisplay from './GitDisplay/GitDisplay';
 import FadeLoader from 'react-spinners/FadeLoader';
-import { Octokit } from '@octokit/core';
+import fetchData from '../../actions/fetch';
 import Button from '../Button/Button';
 
 const Input = styled.input`
@@ -26,56 +26,64 @@ const Spinner = styled.div`
 const ButtonContainer = styled.div`
   margin: 30px 40px;
 `;
+
 function Display() {
+  const dataLimit = 25;
   const [searchInput, setSearchInput] = useState('the lord of the rings');
-  const [gitInfo, setGitInfo] = useState([]);
-  const [pages, setPages] = useState();
+  const [gitInfo, setGitInfo] = useState<any[]>([]);
+  const [pages, setPages] = useState<number>(Math.round(gitInfo?.length / dataLimit));
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const octokit = new Octokit({ auth: `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` });
-  const dataLimit = 25;
 
-  const fetchData = async () => {
+  const results = async () => {
     try {
-      const response = await octokit.request('GET /search/repositories', {
-        q: `${searchInput} in:name`,
-        sort: 'stars',
-        order: 'desc',
-      });
-      setGitInfo(response.data.items);
-      setLoading(false);
-      setPages(Math.ceil(gitInfo.length / dataLimit));
+      const data = await fetchData(searchInput);
+      if (data) {
+        setGitInfo(data);
+        setPages(Math.round(data.length / dataLimit));
+        setLoading(false);
+      }
     } catch (e) {
       console.log('Error', e);
     }
   };
+  useEffect(() => {
+    results();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput]);
 
   const getPaginatedData = () => {
     const startIndex = currentPage * dataLimit - dataLimit;
     const endIndex = startIndex + dataLimit;
-    return gitInfo.slice(startIndex, endIndex);
+    if (gitInfo?.length > 0) {
+      return gitInfo.slice(startIndex, endIndex);
+    }
+    return [];
   };
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput]);
+
   if (loading) {
     return (
       <Spinner>
-        <FadeLoader loading={loading} size={150} />
+        <div className=''>Loading</div>
       </Spinner>
     );
   }
   return (
     <>
-      <Input type='text' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} name='searchbox' />
+      <Input
+        type='text'
+        value={searchInput}
+        placeholder='Typing...'
+        onChange={(e) => setSearchInput(e.target.value)}
+        name='searchbox'
+      />
       <GitDisplay git={getPaginatedData} />
       <ButtonContainer>
         <Button className={`${currentPage === 1 ? 'disabled' : ''}`} onClick={() => setCurrentPage(currentPage - 1)}>
           Prev
         </Button>
         <Button
-          className={`${currentPage === pages ? 'disabled' : ''}`}
+          className={`${currentPage === pages + 1 ? 'disabled' : ''}`}
           onClick={() => setCurrentPage(currentPage + 1)}
         >
           Next
