@@ -23,7 +23,8 @@ describe('<Display/>', () => {
     act(() => {
       renderComponent();
     });
-    expect(await screen.findByPlaceholderText('Typing...')).toBeInTheDocument();
+
+    expect(await screen.findByPlaceholderText('Enter Repo Name')).toBeInTheDocument();
   });
 
   it('should render component test prev button is disable and next button is enable', async () => {

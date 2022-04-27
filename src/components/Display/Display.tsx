@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import GitDisplay from './GitDisplay/GitDisplay';
-import FadeLoader from 'react-spinners/FadeLoader';
 import fetchData from '../../actions/fetch';
 import Button from '../Button/Button';
 
@@ -73,22 +72,29 @@ function Display() {
       <Input
         type='text'
         value={searchInput}
-        placeholder='Typing...'
+        placeholder='Enter Repo Name'
         onChange={(e) => setSearchInput(e.target.value)}
         name='searchbox'
       />
-      <GitDisplay git={getPaginatedData} />
-      <ButtonContainer>
-        <Button className={`${currentPage === 1 ? 'disabled' : ''}`} onClick={() => setCurrentPage(currentPage - 1)}>
-          Prev
-        </Button>
-        <Button
-          className={`${currentPage === pages + 1 ? 'disabled' : ''}`}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Next
-        </Button>
-      </ButtonContainer>
+      {searchInput && (
+        <>
+          <GitDisplay git={getPaginatedData} />
+          <ButtonContainer>
+            <Button
+              className={`${currentPage === 1 ? 'disabled' : ''}`}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              Prev
+            </Button>
+            <Button
+              className={`${currentPage === pages + 1 ? 'disabled' : ''}`}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              Next
+            </Button>
+          </ButtonContainer>
+        </>
+      )}
     </>
   );
 }

@@ -12,13 +12,13 @@ const Details = styled.div`
 const Title = styled.div``;
 
 interface IGitDisplay {
-  git: () => { owner: { login: string }; stargazers_count: string; html_url: string }[];
+  git: () => { owner: { login: string }; stargazers_count: number; html_url: string }[];
 }
 function GitDisplay({ git }: IGitDisplay) {
   return (
     <>
       {git()?.length > 0 ? (
-        git().map((user: { owner: { login: string }; stargazers_count: string; html_url: string }, index) => {
+        git().map((user: { owner: { login: string }; stargazers_count: number; html_url: string }, index) => {
           return (
             <Git key={index}>
               <Details>
